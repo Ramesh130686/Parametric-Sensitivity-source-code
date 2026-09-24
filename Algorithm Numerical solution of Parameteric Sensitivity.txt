@@ -1,0 +1,138 @@
+Algorithm: Numerical solution of the coupled boundary-layer problem
+
+Input:
+    Physical and dimensionless parameters:
+    Rd, β, λ, Pr, Ec, α1, δ, Nr, Nb, Nc, Nt,
+    Df, Sc, Sr, σ, n, E, L1, L2
+
+    Boundary conditions:
+    s3, s5, s8, s12
+
+    Radiation parameter range:
+    Rd = [0.6, 0.9, 1.2, 1.5, 1.8, 2.1, 2.4, 2.7, 3.0, 3.3]
+
+Output:
+    Velocity profiles f'(η) and g'(η)
+    Temperature profile θ(η)
+    Nanoparticle concentration profile φ(η)
+    Solute concentration profile χ(η)
+    Skin-friction coefficient Cf
+    Nusselt number Nu
+    Sherwood number Sh
+    Nanoparticle mass transfer rate Nn
+
+Step 1: Initialize all physical parameters.
+
+Step 2: Define the initial boundary-layer domain
+        η ∈ [0, η∞],
+        where η∞ is initially selected as 1.
+
+Step 3: Define the initial guess vector:
+        Y0 =
+        [f, f', f'', g, g', g'',
+         θ, θ', φ, φ', χ, χ']
+
+        using the specified wall boundary conditions.
+
+Step 4: Specify numerical tolerances:
+        Absolute tolerance = 10^-6
+        Relative tolerance = 10^-6.
+
+Step 5: For each value of Rd in the selected parameter range:
+
+        5.1 Assign the current value of Rd.
+
+        5.2 Formulate the system of 12 first-order
+            ordinary differential equations:
+
+            f'       = Y2
+            f''      = Y3
+            f'''     = momentum equation
+
+            g'       = Y5
+            g''      = Y6
+            g'''     = second momentum equation
+
+            θ'       = Y8
+            θ''      = energy equation
+
+            φ'       = Y10
+            φ''      = nanoparticle concentration equation
+
+            χ'       = Y12
+            χ''      = solute concentration equation
+
+        5.3 Apply the wall and far-field boundary conditions:
+
+            At η = 0:
+                f(0) = 0
+                f'(0) = 1 + L1 f''(0)
+                g(0) = 0
+                g'(0) = 1
+                g''(0) = 0
+                θ(0) = 1 + L2 θ'(0)
+                φ(0) = 0
+                φ'(0) = -(Nt/Nb) φ'(0)
+                χ(0) = 0
+
+            At η → ∞:
+                f'(∞) = 0
+                g'(∞) = 0
+                φ(∞) = 0
+                χ(∞) = 0
+
+        5.4 Convert the boundary-value problem into
+            a numerical BVP representation.
+
+        5.5 Generate the initial mesh and initial solution
+            using the prescribed initial guess.
+
+        5.6 Solve the BVP using the MATLAB BVP4C
+            collocation algorithm.
+
+        5.7 Check convergence.
+
+        5.8 If convergence is not achieved:
+                Increase η∞.
+                Extend the previous solution to the
+                new computational domain.
+                Repeat the BVP4C solution.
+
+            Continue until:
+                η∞ = maximum prescribed domain
+                or the solution satisfies the tolerance.
+
+        5.9 Extract the converged solution:
+                f'(η)
+                g'(η)
+                θ(η)
+                φ(η)
+                χ(η)
+
+        5.10 Evaluate engineering quantities at η = 0:
+
+                Cf = f''(0)
+
+                Nu = θ'(0)
+
+                Sh = -φ'(0)
+
+                Nn = -χ'(0)
+
+        5.11 Store Cf, Nu, Sh and Nn for the current
+             value of Rd.
+
+Step 6: Plot the computed profiles:
+
+        Plot f'(η) versus η.
+        Plot g'(η) versus η.
+        Plot θ(η) versus η.
+        Plot φ(η) versus η.
+        Plot χ(η) versus η.
+
+Step 7: Repeat Steps 5.1–5.11 for all values of Rd.
+
+Step 8: Compare the obtained profiles and engineering
+        quantities for different values of Rd.
+
+Step 9: End the numerical computation.
